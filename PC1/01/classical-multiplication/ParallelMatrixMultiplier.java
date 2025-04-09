@@ -1,8 +1,8 @@
 import java.util.Random;
 
-public class MultiplicationMatrix {
-    static final int L = 4; // Tamaño de la matriz L x L
-    static final int h = 5; // Número de hilos
+public class ParallelMatrixMultiplier {
+    static final int L = 500;
+    static final int h = 10;
 
     static int[][] A = new int[L][L];
     static int[][] B = new int[L][L];
@@ -10,42 +10,47 @@ public class MultiplicationMatrix {
 
     public static void main(String[] args) {
         generarMatrices();
-        System.out.println("Matriz A:");
-        imprimirMatriz(A);
+        // System.out.println("Matriz A:");
+        // imprimirMatriz(A);
 
-        System.out.println("\nMatriz B:");
-        imprimirMatriz(B);
+        // System.out.println("\nMatriz B:");
+        // imprimirMatriz(B);
 
-        // Multiplicación en paralelo
+        long inicioTime = System.nanoTime();
+
         Thread[] hilos = new Thread[h];
         int filasPorHilo = L / h;
 
         for (int i = 0; i < h; i++) {
             int inicio = i * filasPorHilo;
-            int fin = (i == h - 1) ? L : inicio + filasPorHilo; // el último hilo puede tomar más si L no es divisible por h
+            int fin = (i == h - 1) ? L : inicio + filasPorHilo;
             hilos[i] = new Thread(new Multiplicador(inicio, fin));
             hilos[i].start();
         }
 
-        // Esperar que todos los hilos terminen
         for (int i = 0; i < h; i++) {
             try {
                 hilos[i].join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                System.out.println("error: " + e.getMessage());
             }
         }
 
+        long finTime = System.nanoTime();
+        long tiempoTotal = finTime - inicioTime;
+
         // Imprimir la matriz resultado
         System.out.println("\nMatriz resultado C = A x B:");
-        imprimirMatriz(C);
+        // imprimirMatriz(C);
+
+        System.out.println("\nTiempo total: " + tiempoTotal + " ns");
     }
 
     static void generarMatrices() {
         Random rand = new Random();
         for (int i = 0; i < L; i++) {
             for (int j = 0; j < L; j++) {
-                A[i][j] = rand.nextInt(10); // valores entre 0 y 9
+                A[i][j] = rand.nextInt(10);
                 B[i][j] = rand.nextInt(10);
             }
         }
