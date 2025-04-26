@@ -1,7 +1,7 @@
 import java.util.Random;
 
 public class StrassenParallel {
-    static final int N = 4096; // debe ser potencia de 2
+    static final int N = 1024;
     static final int MAX_DEPTH = 1;
 
     public static void main(String[] args) {

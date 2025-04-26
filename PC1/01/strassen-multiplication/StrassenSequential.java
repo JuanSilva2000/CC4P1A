@@ -1,7 +1,7 @@
 import java.util.Random;
 
 public class StrassenSequential {
-  static final int N = 2048; // debe ser potencia de 2
+  static final int N = 1024;
   static int[][] A = new int[N][N];
   static int[][] B = new int[N][N];
 
