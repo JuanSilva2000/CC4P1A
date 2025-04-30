@@ -4,34 +4,42 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class GameState {
     private final Map<Integer, Player> players = new ConcurrentHashMap<>();
     private final List<Projectile> projectiles = new ArrayList<>();
-
-    public Map<Integer, Player> getPlayers() {
+    
+    public Map<Integer, Player> getPlayers(){
         return players;
     }
-
-    public Player getPlayer(int id) {
+    
+    public Player getPlayer(int id){
         return players.get(id);
     }
-
-    public void addPlayer(int id, Player player) {
+    
+    public void addPlayer(int id, Player player){
         players.put(id, player);
     }
-
-    public void removePlayer(int id) {
+    
+    public void removePlayer(int id){
         players.remove(id);
     }
-
-    public List<Projectile> getProjectiles() {
+    
+    public List<Projectile> getProjectiles(){
         return projectiles;
     }
-
-    public void addProjectile(Projectile projectile) {
-        synchronized (projectiles) {
+    
+    public void addProjectile(Projectile projectile){
+        synchronized (projectiles){
             projectiles.add(projectile);
+        }
+    }
+    
+    public List<Projectile> getActiveProjectiles(){
+        synchronized (projectiles){
+            return projectiles.stream().filter(Projectile::isActive).collect(Collectors.toList());
         }
     }
 }

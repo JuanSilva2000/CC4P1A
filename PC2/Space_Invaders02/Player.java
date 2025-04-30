@@ -1,98 +1,106 @@
 package PC2.Space_Invaders02;
 
 public class Player {
-    private final int id;
+    private int id;
     private float x;
     private float y;
     private int score;
     private int lives;
-    private long lastShotTime;
-    private static final long SHOT_COOLDOWN = 500; // 500ms cooldown between shots
-
+    private boolean canShoot;
+    private static final int WIDTH = 30;
+    private static final int HEIGHT = 20;
+    
     public Player(int id, float x, float y) {
         this.id = id;
         this.x = x;
         this.y = y;
         this.score = 0;
         this.lives = 3;
-        this.lastShotTime = 0;
+        this.canShoot = true;
     }
-
+    
     public int getId() {
         return id;
     }
-
+    
     public float getX() {
         return x;
     }
-
-    public void setX(float x) {
-        this.x = x;
-    }
-
+    
     public float getY() {
         return y;
     }
-
+    
+    public void setX(float x) {
+        this.x = x;
+    }
+    
     public void setY(float y) {
         this.y = y;
     }
-
+    
     public int getScore() {
         return score;
     }
-
+    
     public void setScore(int score) {
         this.score = score;
     }
-
+    
     public int getLives() {
         return lives;
     }
-
+    
     public void setLives(int lives) {
         this.lives = lives;
     }
-
+    
     public void move(float dx, float dy) {
-        x += dx;
-        // Keep player within bounds
-        if (x < 0) {
-            x = 0;
-        } else if (x > 770) { // 800 - 30 (player width)
-            x = 770;
-        }
-        
-        y += dy;
+        setX(x + dx);
     }
-
-    public void addScore(int points) {
-        score += points;
-    }
-
-    public void hit() {
-        lives--;
-    }
-
-    public void resetPosition() {
-        x = 400;
-        y = 550;
-    }
-
+    
     public Projectile shoot() {
-        long currentTime = System.currentTimeMillis();
-        if (currentTime - lastShotTime >= SHOT_COOLDOWN) {
-            lastShotTime = currentTime;
-            return new Projectile(x + 15, y, false, id);
+        if (canShoot) {
+            canShoot = false;
+            return new Projectile(x + WIDTH / 2, y - 10, false, id);
         }
         return null;
     }
-
+    
+    public void resetShoot() {
+        canShoot = true;
+    }
+    
+    public void hit() {
+        lives--;
+    }
+    
+    public void addScore(int points) {
+        score += points;
+    }
+    
     public boolean isColliding(Projectile projectile) {
-        // Simple collision detection
+        if (!projectile.isFromAlien() || projectile.getPlayerId() == id) {
+            return false; // Los jugadores no colisionan con sus propios proyectiles
+        }
+        
+        // Colisión basada en rectángulos
         return projectile.getX() >= x && 
-               projectile.getX() <= x + 30 && 
+               projectile.getX() <= x + WIDTH &&
                projectile.getY() >= y && 
-               projectile.getY() <= y + 20;
+               projectile.getY() <= y + HEIGHT;
+    }
+    
+    public void resetPosition() {
+        x = 400; // Posición central
+        y = 550; // Parte inferior de la pantalla
+    }
+    
+    public void resetLives() {
+        lives = 3;
+    }
+    
+    public void resetScore() {
+        score = 0;
     }
 }
