@@ -167,7 +167,7 @@ public class Client extends JFrame {
 
         String[] parts = message.split(":", 2);
         if (parts.length < 2) {
-            System.out.println("[CLIENT] Mensaje inválido recibido: " + message);
+            // System.out.println("[CLIENT] Mensaje inválido recibido: " + message);
             return;
         }
 
@@ -178,7 +178,7 @@ public class Client extends JFrame {
             switch (messageType) {
                 case "CLIENT_ID":
                     clientId = Integer.parseInt(messageContent);
-                    System.out.println("[CLIENT] Assigned client ID: " + clientId);
+                    // System.out.println("[CLIENT] Assigned client ID: " + clientId);
                     break;
                 case "INIT_GAME_STATE":
                     parseInitialGameState(messageContent);
@@ -247,7 +247,7 @@ public class Client extends JFrame {
             int startIdx = content.indexOf("SHIELDS_START:");
             int endIdx = content.indexOf(":SHIELDS_END");
             if (startIdx == -1 || endIdx == -1) {
-                System.out.println("[CLIENT] Formato de escudos incorrecto");
+                // System.out.println("[CLIENT] Formato de escudos incorrecto");
                 return;
             }
 
@@ -260,7 +260,7 @@ public class Client extends JFrame {
                 try {
                     String[] parts = entry.split("\\|");
                     if (parts.length != 2) {
-                        System.out.println("[CLIENT] Entrada de escudo inválida: " + entry);
+                        // System.out.println("[CLIENT] Entrada de escudo inválida: " + entry);
                         continue;
                     }
 
@@ -282,7 +282,7 @@ public class Client extends JFrame {
                     Shield shield = new Shield(x, y);
                     shield.setSegments(segments);
                     shields.add(shield);
-                    System.out.println("[CLIENT] Escudo parseado en (" + x + ", " + y + ")");
+                    // System.out.println("[CLIENT] Escudo parseado en (" + x + ", " + y + ")");
                 } catch (Exception e) {
                     System.out.println("[CLIENT] Error procesando escudo: " + e.getMessage());
                 }
@@ -340,7 +340,7 @@ public class Client extends JFrame {
 
     private void parseGameState(String content) {
         if (content == null || content.isEmpty()) {
-            System.out.println("[CLIENT] Estado de juego vacío recibido");
+            // System.out.println("[CLIENT] Estado de juego vacío recibido");
             return;
         }
 
@@ -413,16 +413,17 @@ public class Client extends JFrame {
                     // Forzar actualización de posición
                     player.setX(x);
                     player.setY(y);
-                    System.out.println("[CLIENT] Jugador " + id + " movido a: " + x + ", " + y);
+                    // System.out.println("[CLIENT] Jugador " + id + " movido a: " + x + ", " + y);
                 }
             }
         }
     }
+    
     private void parseAliens(String aliensData) {
         synchronized (aliens) {
             aliens.clear();
             if (aliensData == null || aliensData.isEmpty()) {
-                System.out.println("[CLIENT] Sin datos de aliens recibidos");
+                // System.out.println("[CLIENT] Sin datos de aliens recibidos");
                 return;
             }
 
@@ -447,8 +448,8 @@ public class Client extends JFrame {
 
             if (aliens.size() > 0) {
                 Alien firstAlien = aliens.get(0);
-                System.out.println("[CLIENT] Recibidos " + aliens.size() + " aliens. Ejemplo: (" 
-                    + firstAlien.getX() + ", " + firstAlien.getY() + ")");
+                // System.out.println("[CLIENT] Recibidos " + aliens.size() + " aliens. Ejemplo: (" 
+                    // + firstAlien.getX() + ", " + firstAlien.getY() + ")");
             }
         }
     }
@@ -750,7 +751,7 @@ public class Client extends JFrame {
             int y = (int) player.getY();
 
             // Debug
-            System.out.println("[DEBUG] Dibujando jugador " + player.getId() + " en (" + x + ", " + y + ")");
+            // System.out.println("[DEBUG] Dibujando jugador " + player.getId() + " en (" + x + ", " + y + ")");
 
             // Cuerpo del jugador (triángulo)
             g2d.fillPolygon(

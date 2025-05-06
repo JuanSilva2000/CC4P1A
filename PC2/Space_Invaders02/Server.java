@@ -33,7 +33,7 @@ public class Server {
         try {
             serverSocket = new ServerSocket(port);
             running = true;
-            System.out.println("Server started on port " + port);
+            System.out.println("Server is connected at " + port);
             
             initializeGameElements();
             
@@ -60,7 +60,7 @@ public class Server {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Could not start server: " + e.getMessage());
+            System.out.println("Sorry :c we could not start server:  " + e.getMessage());
         } finally {
             stop();
         }
@@ -108,7 +108,7 @@ public class Server {
             int spacingX = 50;
             int spacingY = 40;
 
-            System.out.println("[SERVER] Creating aliens for level " + level + " starting at Y: " + startY);
+            // System.out.println("[SERVER] Creating aliens for level " + level + " starting at Y: " + startY);
 
             for (int row = 0; row < rows; row++) {
                 for (int col = 0; col < cols; col++) {
@@ -128,7 +128,7 @@ public class Server {
                 }
             }
 
-            System.out.println("[SERVER] Created " + aliens.size() + " aliens");
+            // System.out.println("[SERVER] Created " + aliens.size() + " aliens");
         }
     }
 
@@ -176,8 +176,8 @@ public class Server {
                     // Log cada 60 frames (~1 segundo) para debugging
                     frameCounter++;
                     if (frameCounter >= 60) {
-                        System.out.println("[SERVER] Game state broadcasted. Level: " + level);
-                        System.out.println("[SERVER] Aliens count: " + aliens.size());
+                        // System.out.println("[SERVER] Game state broadcasted. Level: " + level);
+                        // System.out.println("[SERVER] Aliens count: " + aliens.size());
                         if (!aliens.isEmpty()) {
                             Alien firstAlien = aliens.get(0);
                             System.out.println("[SERVER] Sample alien position: " + firstAlien.getX() + ", " + firstAlien.getY());
@@ -268,7 +268,6 @@ public class Server {
         }
     }
 
-
     private boolean checkAlienBoundary() {
         synchronized (aliens) {
             if (aliens.isEmpty()) return false;
@@ -291,7 +290,7 @@ public class Server {
             boolean hitLeft = (minFormationX <= 0);
 
             if (hitRight || hitLeft) {
-                System.out.println("[SERVER] Aliens hit boundary. Min X: " + minFormationX + ", Max X: " + maxFormationX);
+                // System.out.println("[SERVER] Aliens hit boundary. Min X: " + minFormationX + ", Max X: " + maxFormationX);
                 return true;
             }
             return false;
@@ -317,10 +316,10 @@ public class Server {
                 }
             }
 
-            System.out.println("[SERVER] Aliens moving down. Sample Y: " + aliens.get(0).getY());
+            // System.out.println("[SERVER] Aliens moving down. Sample Y: " + aliens.get(0).getY());
 
             if (reachedBottom) {
-                System.out.println("[SERVER] Aliens reached bottom! Game Over");
+                // System.out.println("[SERVER] Aliens reached bottom! Game Over");
                 broadcastMessage("GAME_OVER:ALIENS_REACHED_BOTTOM");
                 resetGame();
             }
@@ -471,7 +470,7 @@ public class Server {
 
         if (player.getLives() <= 0) {
             broadcastMessage("GAME_OVER:PLAYER_DIED:" + player.getId());
-            System.out.println("[SERVER] Player " + player.getId() + " eliminado. Razón: Sin vidas");
+            // System.out.println("[SERVER] Player " + player.getId() + " eliminado. Razón: Sin vidas");
 
             synchronized (clients) {
                 synchronized (gameState.getPlayers()) {
@@ -481,10 +480,10 @@ public class Server {
             }
 
             if (clients.isEmpty()) {
-                System.out.println("[SERVER] Todos los jugadores desconectados. Reiniciando juego...");
+                // System.out.println("[SERVER] Todos los jugadores desconectados. Reiniciando juego...");
                 resetGame();
             } else {
-                System.out.println("[SERVER] Jugadores restantes: " + clients.size());
+                // System.out.println("[SERVER] Jugadores restantes: " + clients.size());
                 synchronized (gameState.getPlayers()) {
                     gameState.getPlayers().values().forEach(p -> {
                         p.resetPosition();
@@ -676,11 +675,11 @@ public class Server {
         switch (action) {
             case "MOVE_LEFT":
                 player.move(-10, 0);
-                System.out.println("[SERVER] Player " + clientId + " moved LEFT. New position: " + player.getX() + ", " + player.getY());
+                // System.out.println("[SERVER] Player " + clientId + " moved LEFT. New position: " + player.getX() + ", " + player.getY());
                 break;
             case "MOVE_RIGHT":
                 player.move(10, 0);
-                System.out.println("[SERVER] Player " + clientId + " moved RIGHT. New position: " + player.getX() + ", " + player.getY());
+                // System.out.println("[SERVER] Player " + clientId + " moved RIGHT. New position: " + player.getX() + ", " + player.getY());
                 break;
             case "SHOOT":
                 Projectile projectile = player.shoot();
